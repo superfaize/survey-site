@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MathPulse AI research surveys for students, teachers, and administrators.">
+    <title>MathPulse AI Survey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ink: '#172033',
+                        paper: '#f7f9fc',
+                        coral: '#f26d5b',
+                        teal: '#0f766e',
+                        mist: '#e6eef5'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        soft: '0 18px 45px rgba(23, 32, 51, 0.08)'
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #f7f9fc;
+            color: #172033;
+        }
+
+        .hero-grid {
+            background-image: linear-gradient(rgba(23, 32, 51, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 32, 51, .055) 1px, transparent 1px);
+            background-size: 42px 42px;
+        }
+
+        .survey-card {
+            transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+        }
+
+        .survey-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 45px rgba(23, 32, 51, .1);
+        }
+
+        .survey-card[hidden] {
+            display: none;
+        }
+
+        .tab-button {
+            transition: color .2s ease, background-color .2s ease, box-shadow .2s ease;
+        }
+
+        .tab-button[aria-pressed="true"] {
+            background: #172033;
+            color: #fff;
+            box-shadow: 0 5px 14px rgba(23, 32, 51, .16);
+        }
+
+        :focus-visible {
+            outline: 3px solid #f26d5b;
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <header class="hero-grid min-h-[50vh] flex items-center overflow-hidden border-b border-slate-200 bg-white">
+        <div class="mx-auto w-full max-w-7xl px-6 py-16 lg:px-8">
+            <div class="max-w-3xl">
+                <p class="mb-5 flex items-center gap-3 text-sm font-bold uppercase tracking-[0.18em] text-teal">
+                    <span class="h-2 w-2 rounded-full bg-coral" aria-hidden="true"></span>
+                    Research hub / 2025–2026
+                </p>
+                <h1
+                    class="max-w-2xl text-5xl font-black leading-[0.98] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+                    MathPulse <span class="text-coral">AI</span> Survey</h1>
+                <p class="mt-7 max-w-xl text-lg leading-8 text-slate-600">Help us understand how mathematics education
+                    can become more responsive, inclusive, and intelligent. Your perspective will guide the research
+                    behind MathPulse AI and its next generation of learning tools.</p>
+                <a href="#surveys"
+                    class="mt-9 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-coral/20 transition hover:bg-[#dc5848]">
+                    Find your survey <span aria-hidden="true">↓</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- SURVEY CARDS/ LINKS ------------------------------------------------->
+    <main>
+        <section id="surveys" class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="survey-heading">
+            <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+                <div>
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">01 / Share your perspective</p>
+                    <h2 id="survey-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">Choose
+                        a survey</h2>
+                    <p class="mt-3 max-w-xl text-slate-600">Select the role that best matches you. Each survey takes
+                        about 10-20 minutes.</p>
+                </div>
+                <div class="inline-flex w-fit rounded-full border border-slate-200 bg-white p-1.5 shadow-sm"
+                    role="group" aria-label="Filter surveys by audience">
+                    <button class="tab-button rounded-full px-4 py-2 text-sm font-bold text-slate-600" type="button"
+                        data-filter="all" aria-pressed="true">All</button>
+                    <button class="tab-button rounded-full px-4 py-2 text-sm font-bold text-slate-600" type="button"
+                        data-filter="student" aria-pressed="false">Student</button>
+                    <button class="tab-button rounded-full px-4 py-2 text-sm font-bold text-slate-600" type="button"
+                        data-filter="teacher" aria-pressed="false">Teacher</button>
+                    <button class="tab-button rounded-full px-4 py-2 text-sm font-bold text-slate-600" type="button"
+                        data-filter="admin" aria-pressed="false">Admin</button>
+                </div>
+            </div>
+
+            <div class="mt-10 grid gap-5 md:grid-cols-3" aria-live="polite">
+                <article class="survey-card rounded-2xl border border-slate-200 bg-white p-7 shadow-soft"
+                    data-category="student">
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="rounded-full bg-[#fff0ed] px-3 py-1 text-xs font-bold text-coral">Google
+                            Forms</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">01</span>
+                    </div>
+                    <div class="mt-10">
+                        <p class="text-2xl font-bold uppercase tracking-wider text-teal">For students</p>
+                        <h3 class="mt-2 text-2xl font-black text-ink">FEATURE-BASED QUESTIONNAIRE</h3>
+                        <p class="mt-3 min-h-20 leading-7 text-slate-600">Tell us about your experience with
+                            mathematics, technology, and the support that helps you thrive.</p>
+                    </div>
+                    <a class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-ink px-4 py-3 text-sm font-bold text-ink transition hover:bg-ink hover:text-white"
+                        href="https://forms.google.com/" target="_blank" rel="noopener noreferrer">Open survey <span
+                            aria-hidden="true">↗</span></a>
+                </article>
+
+                <article class="survey-card rounded-2xl border border-slate-200 bg-white p-7 shadow-soft"
+                    data-category="teacher">
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="rounded-full bg-[#e8f7f5] px-3 py-1 text-xs font-bold text-teal">Microsoft
+                            Forms</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">02</span>
+                    </div>
+                    <div class="mt-10">
+                       <p class="text-2xl font-bold uppercase tracking-wider text-teal">For Teachers</p>
+                        <h3 class="mt-2 text-2xl font-black text-ink">FEATURE-BASED QUESTIONNAIRE</h3>
+                        <p class="mt-3 min-h-20 leading-7 text-slate-600">Share the classroom realities, teaching
+                            strategies, and insights that should shape an AI learning companion.</p>
+                    </div>
+                    <a class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-ink px-4 py-3 text-sm font-bold text-ink transition hover:bg-ink hover:text-white"
+                        href="https://forms.office.com/" target="_blank" rel="noopener noreferrer">Open survey <span
+                            aria-hidden="true">↗</span></a>
+                </article>
+
+                <article class="survey-card rounded-2xl border border-slate-200 bg-white p-7 shadow-soft"
+                    data-category="admin">
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-bold text-ink">Tally</span>
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">03</span>
+                    </div>
+                    <div class="mt-10">
+                        <p class="text-2xl font-bold uppercase tracking-wider text-teal">For Admins</p>
+                        <h3 class="mt-2 text-2xl font-black text-ink">FEATURE-BASED QUESTIONNAIRE</h3>
+                        <p class="mt-3 min-h-20 leading-7 text-slate-600">Help us explore the institutional priorities
+                            and practical conditions that make meaningful innovation possible.</p>
+                    </div>
+                    <a class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-ink px-4 py-3 text-sm font-bold text-ink transition hover:bg-ink hover:text-white"
+                        href="https://tally.so/" target="_blank" rel="noopener noreferrer">Open survey <span
+                            aria-hidden="true">↗</span></a>
+                </article>
+            </div>
+        </section>
+
+        <section id="about" class="border-y border-slate-200 bg-white" aria-labelledby="about-heading">
+            <div class="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:gap-20 lg:px-8">
+                <div class="overflow-hidden rounded-3xl border border-slate-200 bg-mist shadow-soft" role="img"
+                    aria-label="Abstract illustration of connected mathematical ideas">
+                    <svg viewBox="0 0 640 480" class="h-full w-full" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect width="640" height="480" fill="#e6eef5" />
+                        <circle cx="320" cy="240" r="105" fill="#172033" />
+                        <path d="M320 135v210M215 240h210M246 166l148 148M394 166L246 314" stroke="#f26d5b"
+                            stroke-width="6" stroke-linecap="round" />
+                        <circle cx="320" cy="240" r="30" fill="#f7f9fc" />
+                        <circle cx="95" cy="100" r="16" fill="#0f766e" />
+                        <circle cx="545" cy="105" r="16" fill="#0f766e" />
+                        <circle cx="100" cy="380" r="16" fill="#f26d5b" />
+                        <circle cx="540" cy="375" r="16" fill="#f26d5b" />
+                        <path d="M110 108l135 93M530 113L395 201M112 372l134-92M525 365L395 280" stroke="#fff"
+                            stroke-width="3" stroke-dasharray="8 12" />
+                        <text x="320" y="252" text-anchor="middle" fill="#172033" font-size="24"
+                            font-family="sans-serif" font-weight="700">∑</text>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">02 / The bigger idea</p>
+                    <h2 id="about-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">Building
+                        a clearer path through mathematics.</h2>
+                    <p class="mt-6 leading-8 text-slate-600">MathPulse AI is an educational research project exploring
+                        how artificial intelligence can support more personal, confident, and meaningful mathematics
+                        learning.</p>
+                    <p class="mt-4 leading-8 text-slate-600">We bring together learner voice, teacher expertise, and
+                        institutional context to design a system that responds to real needs: useful feedback,
+                        accessible explanations, and insight that helps everyone move forward.</p>
+                    <ul class="mt-7 grid gap-3 text-sm font-bold text-ink sm:grid-cols-2">
+                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Adaptive learning support
+                        </li>
+                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Human-centered research
+                        </li>
+                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Actionable insights</li>
+                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Inclusive by design</li>
+                    </ul>
+                    <a href="https://mathpulse.ai/" target="_blank" rel="noopener noreferrer"
+                        class="mt-9 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white transition hover:bg-teal">Visit
+                        MathPulse AI <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="team-heading">
+            <div class="text-center">
+                <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">03 / The people behind it</p>
+                <h2 id="team-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">Research team
+                </h2>
+                <p class="mx-auto mt-3 max-w-xl text-slate-600">A collaborative project shaped by people who care about
+                    better mathematics education.</p>
+            </div>
+            <div class="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                    <div
+                        class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#fff0ed] text-2xl font-black text-coral">
+                        AM</div>
+                    <h3 class="mt-5 font-black text-ink">Alex Morgan</h3>
+                    <p class="mt-1 text-sm text-slate-500">Project Lead</p>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                    <div
+                        class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e8f7f5] text-2xl font-black text-teal">
+                        JS</div>
+                    <h3 class="mt-5 font-black text-ink">Jamie Santos</h3>
+                    <p class="mt-1 text-sm text-slate-500">AI Researcher</p>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                    <div
+                        class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#eef1f8] text-2xl font-black text-ink">
+                        RK</div>
+                    <h3 class="mt-5 font-black text-ink">Riley Kim</h3>
+                    <p class="mt-1 text-sm text-slate-500">Data Analyst</p>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                    <div
+                        class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#fff0ed] text-2xl font-black text-coral">
+                        TN</div>
+                    <h3 class="mt-5 font-black text-ink">Taylor Ng</h3>
+                    <p class="mt-1 text-sm text-slate-500">Math Educator</p>
+                </article>
+                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
+                    <div
+                        class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e8f7f5] text-2xl font-black text-teal">
+                        OB</div>
+                    <h3 class="mt-5 font-black text-ink">Owen Brooks</h3>
+                    <p class="mt-1 text-sm text-slate-500">UX Researcher</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-ink text-white">
+        <div
+            class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+            <div>
+                <p class="font-black">MathPulse AI Survey</p>
+                <p class="mt-1 text-sm text-slate-400">© 2025–2026-2027
+                    <br>
+                    MathPulse AI Research Team
+                    <br>
+                    Pamantasan Ng Lungsod Ng Valenzuela
+                </p>
+            </div>
+            <nav aria-label="Footer navigation" class="flex gap-5 text-sm font-bold text-slate-300"><a href="#surveys"
+                    class="transition hover:text-white">Surveys</a><a href="#about"
+                    class="transition hover:text-white">About</a><a href="#team"
+                    class="transition hover:text-white">Team</a></nav>
+        </div>
+    </footer>
+
+    <script>
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const surveyCards = document.querySelectorAll('[data-category]');
+
+        filterButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const selectedFilter = button.dataset.filter;
+
+                filterButtons.forEach((filterButton) => {
+                    filterButton.setAttribute('aria-pressed', String(filterButton === button));
+                });
+
+                surveyCards.forEach((card) => {
+                    card.hidden = selectedFilter !== 'all' && card.dataset.category !== selectedFilter;
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
