@@ -71,12 +71,12 @@
         }
 
         .survey-card {
-            transition: transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+            transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease, opacity .45s ease;
         }
 
         .survey-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 18px 45px rgba(23, 32, 51, .1);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 22px 48px rgba(23, 32, 51, .14);
         }
 
         .survey-card[hidden] {
@@ -84,7 +84,19 @@
         }
 
         .tab-button {
-            transition: color .2s ease, background-color .2s ease, box-shadow .2s ease;
+            transition: color .2s ease, background-color .2s ease, box-shadow .2s ease, transform .2s ease;
+        }
+
+        .tab-button:hover,
+        .tab-button:focus-visible {
+            transform: translateY(-2px);
+            color: #172033;
+            box-shadow: 0 5px 12px rgba(23, 32, 51, .1);
+        }
+
+        .tab-button[aria-pressed="true"]:hover,
+        .tab-button[aria-pressed="true"]:focus-visible {
+            color: #fff;
         }
 
         .tab-button[aria-pressed="true"] {
@@ -96,6 +108,67 @@
         :focus-visible {
             outline: 3px solid #f26d5b;
             outline-offset: 3px;
+        }
+
+        main > section,
+        main article,
+        main aside,
+        [data-image-placeholder] {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
+        }
+
+        main > section.is-visible,
+        main article.is-visible,
+        main aside.is-visible,
+        [data-image-placeholder].is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        main article:nth-child(2),
+        main aside:nth-child(2) { transition-delay: .08s; }
+        main article:nth-child(3) { transition-delay: .16s; }
+        main article:nth-child(4) { transition-delay: .24s; }
+
+        header a,
+        main a,
+        .motion-button {
+            transition: transform .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+        }
+
+        header a:hover,
+        header a:focus-visible,
+        main a:hover,
+        main a:focus-visible,
+        .motion-button:hover,
+        .motion-button:focus-visible {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(23, 32, 51, .16);
+        }
+
+        header a:active,
+        main a:active,
+        .motion-button:active,
+        .tab-button:active {
+            transform: translateY(0) scale(.98);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .hero-avatar,
+            .survey-card,
+            .tab-button,
+            main article,
+            main aside,
+            [data-image-placeholder],
+            main > section,
+            .motion-button { animation: none; transition: none; }
+            main article,
+            main aside,
+            [data-image-placeholder],
+            main > section { opacity: 1; transform: none; }
         }
     </style>
 </head>
@@ -121,11 +194,10 @@
                     Help Us Improve Math Learning. <br>
                     We’re gathering your feedback on MathPulse AI, an AI-powered learning tool designed to support Grade
                     11 students in mathematics.
-                    Your experience and honest feedback will help us understand what works, what can be improved, and
                     how MathPulse AI can better support students.
                 </p>
                 <a href="#surveys"
-                    class="mt-9 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-coral/20 transition hover:bg-[#dc5848]">
+                    class="motion-button mt-9 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-coral/20 transition hover:bg-[#dc5848]">
                     Find which survey is for you<span aria-hidden="true">↓</span>
                 </a>
             </div>
@@ -318,7 +390,6 @@
                 </div>
             </div>
         </section>
-
         <section id="team" class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="team-heading">
             <div class="text-center">
                 <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">04 / The people behind it</p>
@@ -388,6 +459,22 @@
     <script>
         const filterButtons = document.querySelectorAll('[data-filter]');
         const surveyCards = document.querySelectorAll('[data-category]');
+        const motionElements = document.querySelectorAll('main > section, main article, main aside, [data-image-placeholder]');
+
+        if ('IntersectionObserver' in window) {
+            const motionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            motionElements.forEach((element) => motionObserver.observe(element));
+        } else {
+            motionElements.forEach((element) => element.classList.add('is-visible'));
+        }
 
         filterButtons.forEach((button) => {
             button.addEventListener('click', () => {
