@@ -34,13 +34,14 @@
         }
 
         body {
-            background: #f7f9fc;
-            color: #172033;
+            background: #fbfaff;
+            color: #31215f;
+            background-image: radial-gradient(circle at 8% 0%, rgba(196, 181, 253, .28), transparent 30%), radial-gradient(circle at 92% 12%, rgba(186, 230, 253, .32), transparent 28%);
         }
 
         .hero-grid {
-            background-image: linear-gradient(rgba(23, 32, 51, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 32, 51, .055) 1px, transparent 1px);
-            background-size: 42px 42px;
+            background-image: linear-gradient(rgba(109, 40, 217, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, .06) 1px, transparent 1px), radial-gradient(circle at 18% 24%, rgba(196, 181, 253, .3), transparent 34%), radial-gradient(circle at 86% 82%, rgba(186, 230, 253, .34), transparent 30%);
+            background-size: 48px 48px, 48px 48px, auto, auto;
         }
 
         .hero-avatar-frame {
@@ -137,7 +138,137 @@
         }
 
         dialog::backdrop {
-            background: rgba(23, 32, 51, .88);
+            background: rgba(49, 33, 95, .45);
+        }
+
+        /* Shared light institutional surface and accent treatment. */
+        .bg-white {
+            background-color: #ffffff !important;
+        }
+
+        .bg-mist {
+            background-color: #f1edff !important;
+        }
+
+        .bg-ink {
+            background-color: #31215f !important;
+        }
+
+        .text-ink {
+            color: #31215f !important;
+        }
+
+        .text-slate-600 {
+            color: #5f6681 !important;
+        }
+
+        .text-slate-700 {
+            color: #4c526d !important;
+        }
+
+        .text-slate-500,
+        .text-slate-400 {
+            color: #7b8098 !important;
+        }
+
+        .text-teal {
+            color: #3974c8 !important;
+        }
+
+        .text-coral {
+            color: #6d28d9 !important;
+        }
+
+        .bg-coral {
+            background-image: linear-gradient(115deg, #4c1d95, #6d28d9 58%, #8b5cf6) !important;
+        }
+
+        .border-slate-200 {
+            border-color: rgba(109, 40, 217, .14) !important;
+        }
+
+        .border-teal\/40 {
+            border-color: rgba(59, 130, 246, .35) !important;
+        }
+
+        .border-coral\/30 {
+            border-color: rgba(109, 40, 217, .24) !important;
+        }
+
+        header,
+        main > section,
+        footer {
+            border-color: rgba(148, 163, 184, .18) !important;
+        }
+
+        header,
+        main > section {
+            background-color: rgba(255, 255, 255, .72) !important;
+        }
+
+        main > section:nth-child(even) {
+            background-color: rgba(242, 239, 255, .72) !important;
+            background-image: linear-gradient(135deg, rgba(196, 181, 253, .18), transparent 46%), linear-gradient(315deg, rgba(186, 230, 253, .2), transparent 42%);
+        }
+
+        .shadow-soft,
+        .shadow-sm {
+            box-shadow: 0 14px 34px rgba(76, 29, 149, .1), 0 0 0 1px rgba(109, 40, 217, .04);
+        }
+
+        .survey-card,
+        main article,
+        main aside,
+        [data-lightbox-image],
+        #sneakpeek-slideshow {
+            background-image: linear-gradient(145deg, rgba(196, 181, 253, .12), transparent 48%), linear-gradient(315deg, rgba(186, 230, 253, .14), transparent 38%);
+        }
+
+        .survey-card:hover,
+        [data-lightbox-image]:hover {
+            box-shadow: 0 18px 42px rgba(76, 29, 149, .16), 0 0 18px rgba(59, 130, 246, .1);
+        }
+
+        a.bg-ink,
+        .motion-button.bg-coral {
+            background-image: linear-gradient(115deg, #4c1d95, #6d28d9 58%, #8b5cf6) !important;
+        }
+
+        .border-ink {
+            border-color: rgba(76, 29, 149, .55) !important;
+        }
+
+        dialog > div {
+            background-color: #ffffff !important;
+            border: 1px solid rgba(109, 40, 217, .24);
+        }
+
+        #mobile-app {
+            background-color: rgba(239, 235, 255, .82) !important;
+            background-image: linear-gradient(135deg, rgba(196, 181, 253, .25), transparent 48%), linear-gradient(315deg, rgba(186, 230, 253, .24), transparent 45%);
+            color: #31215f;
+        }
+
+        #mobile-app .text-white {
+            color: #31215f !important;
+        }
+
+        #mobile-app .text-slate-300 {
+            color: #5f6681 !important;
+        }
+
+        #mobile-app span {
+            color: #ffffff !important;
+        }
+
+        @media (max-width: 640px) {
+            .hero-avatar-frame {
+                max-width: 17rem;
+            }
+
+            #sneakpeek-slideshow [data-slideshow-image] {
+                max-height: 58vh;
+            }
         }
 
         header a,
