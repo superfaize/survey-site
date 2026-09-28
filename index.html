@@ -12,17 +12,18 @@
             theme: {
                 extend: {
                     colors: {
-                        ink: '#172033',
-                        paper: '#f7f9fc',
-                        coral: '#f26d5b',
-                        teal: '#0f766e',
-                        mist: '#e6eef5'
+                        indigoNode: '#4f46e5', /* Electric Indigo */
+                        tealNode: '#0d9488',   /* Muted Teal */
+                        coralNode: '#f26d5b',  /* Warm Coral */
+                        baseDark: '#09090b',   /* Deep background */
+                        glassDark: 'rgba(20, 24, 39, 0.45)',
+                        glassBorder: 'rgba(255, 255, 255, 0.12)'
                     },
                     fontFamily: {
                         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
                     },
-                    boxShadow: {
-                        soft: '0 18px 45px rgba(23, 32, 51, 0.08)'
+                    backgroundImage: {
+                        'gradient-cta': 'linear-gradient(45deg, #f26d5b, #4f46e5)'
                     }
                 }
             }
@@ -34,32 +35,75 @@
         }
 
         body {
-            background: #fbfaff;
-            color: #31215f;
-            background-image: radial-gradient(circle at 8% 0%, rgba(196, 181, 253, .28), transparent 30%), radial-gradient(circle at 92% 12%, rgba(186, 230, 253, .32), transparent 28%);
+            background-color: #09090b;
+            color: #e2e8f0; /* Light slate for accessible high contrast */
+            min-height: 100vh;
         }
 
-        .hero-grid {
-            background-image: linear-gradient(rgba(109, 40, 217, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, .06) 1px, transparent 1px), radial-gradient(circle at 18% 24%, rgba(196, 181, 253, .3), transparent 34%), radial-gradient(circle at 86% 82%, rgba(186, 230, 253, .34), transparent 30%);
-            background-size: 48px 48px, 48px 48px, auto, auto;
+        /* Fixed 8% Grain Texture Overlay - Tiled to prevent stretching */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px; /* Forces the noise to stay crisp */
         }
 
-        .hero-avatar-frame {
-            perspective: 900px;
+        /* Ambient Mesh Gradient Blobs - Fixed using radial gradients instead of CSS blur */
+        @keyframes flow {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(3vw, -5vh) scale(1.1) rotate(10deg); }
+            66% { transform: translate(-2vw, 4vh) scale(0.9) rotate(-5deg); }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); }
         }
 
+        .mesh-blob {
+            position: fixed;
+            border-radius: 50%;
+            animation: flow 15s ease-in-out infinite alternate;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Asymmetric balance using radial gradients that naturally fade to transparent without artifacting */
+        .blob-1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, rgba(79,70,229,0.3) 0%, rgba(79,70,229,0) 70%); animation-delay: 0s; }
+        .blob-2 { bottom: -20%; right: -10%; width: 70vw; height: 70vw; background: radial-gradient(circle, rgba(242,109,91,0.25) 0%, rgba(242,109,91,0) 70%); animation-delay: -5s; }
+        .blob-3 { top: 30%; left: 20%; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(13,148,136,0.2) 0%, rgba(13,148,136,0) 70%); animation-delay: -10s; }
+
+        /* Glassmorphic Panels */
+        .glass-panel {
+            background: var(--glassDark);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(79, 70, 229, 0.08);
+            transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease, border-color .3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 48px 0 rgba(242, 109, 91, 0.12);
+        }
+
+        /* Hero Avatar Animation */
+        .hero-avatar-frame { perspective: 900px; }
         .hero-avatar {
             animation: avatar-float 5s ease-in-out infinite;
             transition: transform .35s ease, filter .35s ease, box-shadow .35s ease;
             transform: rotate(-2deg) translateY(0);
         }
-
         .hero-avatar-frame:hover .hero-avatar,
         .hero-avatar-frame:focus-within .hero-avatar {
             animation-play-state: paused;
             filter: saturate(1.12) contrast(1.04);
             transform: rotate(2deg) translateY(-10px) scale(1.035);
-            box-shadow: 0 25px 45px rgba(23, 32, 51, .2);
+            box-shadow: 0 25px 45px rgba(242, 109, 91, 0.3);
         }
 
         @keyframes avatar-float {
@@ -68,463 +112,261 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .hero-avatar { animation: none; transition: none; }
+            .hero-avatar, .mesh-blob { animation: none; transition: none; }
         }
 
-        .survey-card {
-            transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease, opacity .45s ease;
+        /* CTA Buttons */
+        .btn-glow {
+            background: var(--gradient-cta);
+            background-size: 200% 200%;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
         }
 
-        .survey-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 22px 48px rgba(23, 32, 51, .14);
-        }
-
-        .survey-card[hidden] {
-            display: none;
-        }
-
-        .tab-button {
-            transition: color .2s ease, background-color .2s ease, box-shadow .2s ease, transform .2s ease;
-        }
-
-        .tab-button:hover,
-        .tab-button:focus-visible {
+        .btn-glow:hover, .btn-glow:focus-visible {
             transform: translateY(-2px);
-            color: #172033;
-            box-shadow: 0 5px 12px rgba(23, 32, 51, .1);
+            box-shadow: 0 8px 25px rgba(242, 109, 91, 0.5);
+            background-position: 100% 50%;
+        }
+        
+        .btn-glow:active {
+            transform: translateY(0) scale(0.98);
         }
 
-        .tab-button[aria-pressed="true"]:hover,
-        .tab-button[aria-pressed="true"]:focus-visible {
-            color: #fff;
-        }
-
-        .tab-button[aria-pressed="true"] {
-            background: #172033;
-            color: #fff;
-            box-shadow: 0 5px 14px rgba(23, 32, 51, .16);
-        }
-
-        :focus-visible {
-            outline: 3px solid #f26d5b;
-            outline-offset: 3px;
-        }
-
-        main > section,
-        main article,
-        main aside,
-        [data-image-placeholder] {
+        /* Scroll Reveal Utility */
+        main > section, main article, main aside, [data-image-placeholder] {
             opacity: 0;
             transform: translateY(24px);
             transition: opacity .7s ease, transform .7s cubic-bezier(.2, .8, .2, 1);
         }
-
-        main > section.is-visible,
-        main article.is-visible,
-        main aside.is-visible,
-        [data-image-placeholder].is-visible {
+        main > section.is-visible, main article.is-visible, main aside.is-visible, [data-image-placeholder].is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-
-        main article:nth-child(2),
-        main aside:nth-child(2) { transition-delay: .08s; }
+        main article:nth-child(2), main aside:nth-child(2) { transition-delay: .08s; }
         main article:nth-child(3) { transition-delay: .16s; }
         main article:nth-child(4) { transition-delay: .24s; }
 
-        .lightbox-backdrop {
-            background: rgba(23, 32, 51, .88);
-        }
-
         dialog::backdrop {
-            background: rgba(49, 33, 95, .45);
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
         }
 
-        /* Shared light institutional surface and accent treatment. */
-        .bg-white {
-            background-color: #ffffff !important;
-        }
-
-        .bg-mist {
-            background-color: #f1edff !important;
-        }
-
-        .bg-ink {
-            background-color: #31215f !important;
-        }
-
-        .text-ink {
-            color: #31215f !important;
-        }
-
-        .text-slate-600 {
-            color: #5f6681 !important;
-        }
-
-        .text-slate-700 {
-            color: #4c526d !important;
-        }
-
-        .text-slate-500,
-        .text-slate-400 {
-            color: #7b8098 !important;
-        }
-
-        .text-teal {
-            color: #3974c8 !important;
-        }
-
-        .text-coral {
-            color: #6d28d9 !important;
-        }
-
-        .bg-coral {
-            background-image: linear-gradient(115deg, #4c1d95, #6d28d9 58%, #8b5cf6) !important;
-        }
-
-        .border-slate-200 {
-            border-color: rgba(109, 40, 217, .14) !important;
-        }
-
-        .border-teal\/40 {
-            border-color: rgba(59, 130, 246, .35) !important;
-        }
-
-        .border-coral\/30 {
-            border-color: rgba(109, 40, 217, .24) !important;
-        }
-
-        header,
-        main > section,
-        footer {
-            border-color: rgba(148, 163, 184, .18) !important;
-        }
-
-        header,
-        main > section {
-            background-color: rgba(255, 255, 255, .72) !important;
-        }
-
-        main > section:nth-child(even) {
-            background-color: rgba(242, 239, 255, .72) !important;
-            background-image: linear-gradient(135deg, rgba(196, 181, 253, .18), transparent 46%), linear-gradient(315deg, rgba(186, 230, 253, .2), transparent 42%);
-        }
-
-        .shadow-soft,
-        .shadow-sm {
-            box-shadow: 0 14px 34px rgba(76, 29, 149, .1), 0 0 0 1px rgba(109, 40, 217, .04);
-        }
-
-        .survey-card,
-        main article,
-        main aside,
-        [data-lightbox-image],
-        #sneakpeek-slideshow {
-            background-image: linear-gradient(145deg, rgba(196, 181, 253, .12), transparent 48%), linear-gradient(315deg, rgba(186, 230, 253, .14), transparent 38%);
-        }
-
-        .survey-card:hover,
-        [data-lightbox-image]:hover {
-            box-shadow: 0 18px 42px rgba(76, 29, 149, .16), 0 0 18px rgba(59, 130, 246, .1);
-        }
-
-        a.bg-ink,
-        .motion-button.bg-coral {
-            background-image: linear-gradient(115deg, #4c1d95, #6d28d9 58%, #8b5cf6) !important;
-        }
-
-        .border-ink {
-            border-color: rgba(76, 29, 149, .55) !important;
-        }
-
-        dialog > div {
-            background-color: #ffffff !important;
-            border: 1px solid rgba(109, 40, 217, .24);
-        }
-
-        #mobile-app {
-            background-color: rgba(239, 235, 255, .82) !important;
-            background-image: linear-gradient(135deg, rgba(196, 181, 253, .25), transparent 48%), linear-gradient(315deg, rgba(186, 230, 253, .24), transparent 45%);
-            color: #31215f;
-        }
-
-        #mobile-app .text-white {
-            color: #31215f !important;
-        }
-
-        #mobile-app .text-slate-300 {
-            color: #5f6681 !important;
-        }
-
-        #mobile-app span {
-            color: #ffffff !important;
-        }
-
-        @media (max-width: 640px) {
-            .hero-avatar-frame {
-                max-width: 17rem;
-            }
-
-            #sneakpeek-slideshow [data-slideshow-image] {
-                max-height: 58vh;
-            }
-        }
-
-        header a,
-        main a,
-        .motion-button {
-            transition: transform .2s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
-        }
-
-        header a:hover,
-        header a:focus-visible,
-        main a:hover,
-        main a:focus-visible,
-        .motion-button:hover,
-        .motion-button:focus-visible {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 22px rgba(23, 32, 51, .16);
-        }
-
-        header a:active,
-        main a:active,
-        .motion-button:active,
-        .tab-button:active {
-            transform: translateY(0) scale(.98);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            .hero-avatar,
-            .survey-card,
-            .tab-button,
-            main article,
-            main aside,
-            [data-image-placeholder],
-            main > section,
-            .motion-button { animation: none; transition: none; }
-            main article,
-            main aside,
-            [data-image-placeholder],
-            main > section { opacity: 1; transform: none; }
+        :focus-visible {
+            outline: 2px solid #f26d5b;
+            outline-offset: 3px;
         }
     </style>
 </head>
 
-<body class="antialiased">
-    <header class="hero-grid min-h-[50vh] flex items-center overflow-hidden border-b border-slate-200 bg-white">
+<body class="antialiased relative overflow-x-hidden selection:bg-indigoNode/40 selection:text-white">
+
+    <!-- Global Grain Overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Mesh Gradient Nodes -->
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+
+    <header class="min-h-[50vh] flex items-center overflow-hidden border-b border-white/5 bg-baseDark/20 backdrop-blur-sm relative z-10">
         <div class="mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-16 lg:grid-cols-[minmax(250px,0.75fr)_minmax(0,1.25fr)] lg:gap-16 lg:px-8">
             <div class="hero-avatar-frame relative mx-auto w-full max-w-sm lg:mx-0" tabindex="0" aria-label="MathPulse AI learning modules illustration">
-                <div class="absolute -left-3 top-8 h-16 w-16 rounded-full border-4 border-coral/30" aria-hidden="true"></div>
-                <div class="absolute -bottom-4 -right-3 h-24 w-24 rounded-full bg-teal/10" aria-hidden="true"></div>
-                <img class="hero-avatar relative z-10 aspect-square w-full rounded-[2rem] border-8 border-white object-cover shadow-soft" src="assets/modules_avatar.png" alt="MathPulse AI learning modules avatar">
+                <div class="absolute -left-3 top-8 h-16 w-16 rounded-full border-[3px] border-coralNode/60" aria-hidden="true"></div>
+                <div class="absolute -bottom-4 -right-3 h-24 w-24 rounded-full bg-tealNode/30 blur-md" aria-hidden="true"></div>
+                <img class="hero-avatar relative z-10 aspect-square w-full rounded-[2rem] border border-white/20 bg-white/5 object-cover shadow-2xl" src="assets/modules_avatar.png" alt="MathPulse AI learning modules avatar">
             </div>
-            <div class="max-w-3xl">
-                <p class="mb-5 flex items-center gap-3 text-sm font-bold uppercase tracking-[0.18em] text-teal">
-                    <span class="h-2 w-2 rounded-full bg-coral" aria-hidden="true"></span>
+            <div class="max-w-3xl relative z-10">
+                <p class="mb-5 flex items-center gap-3 text-sm font-bold uppercase tracking-[0.18em] text-tealNode">
+                    <span class="h-2 w-2 rounded-full bg-coralNode shadow-[0_0_10px_#f26d5b]" aria-hidden="true"></span>
                     BSIT 4-5
                 </p>
-                <h1
-                    class="mt-4 text-3xl font-black leading-[0.98] tracking-tight text-ink sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl ">
-                    MathPulse AI <span class="text-coral">Survey</span>
+                <h1 class="mt-4 text-3xl font-black leading-[0.98] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+                    MathPulse AI <span class="text-transparent bg-clip-text bg-gradient-cta">Survey</span>
                 </h1>
-                <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
+                <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
                     Help Us Improve Math Learning. <br>
                     We’re gathering your feedback on MathPulse AI, an AI-powered learning tool designed to support Grade
                     11 students in mathematics.
-                    how MathPulse AI can better support students.
                 </p>
-                <a href="#surveys"
-                    class="motion-button mt-9 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-coral/20 transition hover:bg-[#dc5848]">
+                <a href="#surveys" class="btn-glow mt-9 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-white">
                     Learn more about MathPulse AI<span aria-hidden="true">↓</span>
                 </a>
             </div>
         </div>
     </header>
     
+    <main class="relative z-10">
 
-    <!-- SURVEY CARDS/ LINKS ------------------------------------------------->
-    <main>
-
-         <section id="reminders" class="border-y border-slate-200 bg-mist" aria-labelledby="reminders-heading">
+         <section id="reminders" class="border-y border-white/5 bg-white/5 backdrop-blur-md" aria-labelledby="reminders-heading">
             <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
                 <div class="max-w-3xl">
-                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">Important before you begin</p>
-                    <h2 id="reminders-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coralNode">Important before you begin</p>
+                    <h2 id="reminders-heading" class="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
                         Reminders / Important Instructions
                     </h2>
-                    <p class="mt-3 leading-8 text-slate-600">Please check these reminders so your survey participation is complete and ready for the researchers.</p>
+                    <p class="mt-3 leading-8 text-slate-300">Please check these reminders so your survey participation is complete and ready for the researchers.</p>
                 </div>
 
                 <div class="mt-10 grid gap-5 lg:grid-cols-2">
-                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-soft lg:col-span-2">
+                    <article class="glass-panel rounded-2xl p-7 lg:col-span-2">
                         <div class="flex items-start justify-between gap-4">
                             <div>
-                                <p class="text-sm font-bold uppercase tracking-[0.18em] text-teal">01 / Consent forms</p>
-                                <h3 class="mt-2 text-2xl font-black text-ink">Complete, sign, and return every page</h3>
+                                <p class="text-sm font-bold uppercase tracking-[0.18em] text-tealNode">01 / Consent forms</p>
+                                <h3 class="mt-2 text-2xl font-black text-white">Complete, sign, and return every page</h3>
                             </div>
-                            <span class="rounded-full bg-coral/10 px-3 py-1 text-xs font-bold text-coral">Required</span>
+                            <span class="rounded-full bg-coralNode/10 border border-coralNode/30 px-3 py-1 text-xs font-bold text-coralNode">Required</span>
                         </div>
-                        <p class="mt-4 leading-7 text-slate-600">The Informed Consent Forms for both parents/guardians and students must be completely filled out, signed, and returned to the researchers.</p>
+                        <p class="mt-4 leading-7 text-slate-300">The Informed Consent Forms for both parents/guardians and students must be completely filled out, signed, and returned to the researchers.</p>
                         <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-                            <button type="button" class="group overflow-hidden rounded-xl border border-slate-200 bg-mist text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0001.jpg" data-lightbox-alt="Informed consent form page 1 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0001.jpg" alt="Informed consent form page 1 preview"></button>
-                            <button type="button" class="group overflow-hidden rounded-xl border border-slate-200 bg-mist text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0002.jpg" data-lightbox-alt="Informed consent form page 2 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0002.jpg" alt="Informed consent form page 2 preview"></button>
-                            <button type="button" class="group overflow-hidden rounded-xl border border-slate-200 bg-mist text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0003.jpg" data-lightbox-alt="Informed consent form page 3 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0003.jpg" alt="Informed consent form page 3 preview"></button>
-                            <button type="button" class="group overflow-hidden rounded-xl border border-slate-200 bg-mist text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0004.jpg" data-lightbox-alt="Informed consent form page 4 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0004.jpg" alt="Informed consent form page 4 preview"></button>
-                            <button type="button" class="group overflow-hidden rounded-xl border border-slate-200 bg-mist text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0005.jpg" data-lightbox-alt="Informed consent form page 5 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0005.jpg" alt="Informed consent form page 5 preview"></button>
+                            <button type="button" class="group overflow-hidden rounded-xl border border-white/10 bg-black/20 text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0001.jpg" data-lightbox-alt="Informed consent form page 1 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105 opacity-70 group-hover:opacity-100" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0001.jpg" alt="Informed consent form page 1 preview"></button>
+                            <button type="button" class="group overflow-hidden rounded-xl border border-white/10 bg-black/20 text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0002.jpg" data-lightbox-alt="Informed consent form page 2 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105 opacity-70 group-hover:opacity-100" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0002.jpg" alt="Informed consent form page 2 preview"></button>
+                            <button type="button" class="group overflow-hidden rounded-xl border border-white/10 bg-black/20 text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0003.jpg" data-lightbox-alt="Informed consent form page 3 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105 opacity-70 group-hover:opacity-100" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0003.jpg" alt="Informed consent form page 3 preview"></button>
+                            <button type="button" class="group overflow-hidden rounded-xl border border-white/10 bg-black/20 text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0004.jpg" data-lightbox-alt="Informed consent form page 4 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105 opacity-70 group-hover:opacity-100" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0004.jpg" alt="Informed consent form page 4 preview"></button>
+                            <button type="button" class="group overflow-hidden rounded-xl border border-white/10 bg-black/20 text-left" data-lightbox-image="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0005.jpg" data-lightbox-alt="Informed consent form page 5 preview"><img class="aspect-[3/4] h-full w-full object-cover transition duration-300 group-hover:scale-105 opacity-70 group-hover:opacity-100" src="assets/ics%20forms/ics%201%20and%202%20tagalog_page-0005.jpg" alt="Informed consent form page 5 preview"></button>
                         </div>
                     </article>
 
-                    <article class="rounded-2xl border border-slate-200 bg-white p-7 shadow-soft">
-                            <p class="text-sm font-bold uppercase tracking-[0.18em] text-teal">02 / Student questionnaire</p>
-                            <h3 class="mt-2 text-2xl font-black text-ink">The student questionnaire is online</h3>
-                            <p class="mt-4 leading-7 text-slate-600">The student questionnaire is now available through Google Forms. Please use the survey link in the “Share your perspective” section below to participate.</p>
+                    <article class="glass-panel rounded-2xl p-7">
+                        <p class="text-sm font-bold uppercase tracking-[0.18em] text-tealNode">02 / Student questionnaire</p>
+                        <h3 class="mt-2 text-2xl font-black text-white">The student questionnaire is online</h3>
+                        <p class="mt-4 leading-7 text-slate-300">The student questionnaire is now available through Google Forms. Please use the survey link in the “Share your perspective” section below to participate.</p>
                     </article>
-                    <aside class="rounded-2xl border-2 border-coral/30 bg-coral/10 p-7" aria-label="Forms reminder">
-                            <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">Need a form?</p>
-                            <h3 class="mt-2 text-2xl font-black text-ink">Have not received or completed the forms?</h3>
-                            <p class="mt-4 leading-7 text-slate-700">Please coordinate directly with the researchers conducting the survey before participating.</p>
+                    
+                    <aside class="glass-panel rounded-2xl border-l-[3px] border-l-coralNode p-7" aria-label="Forms reminder">
+                        <p class="text-sm font-bold uppercase tracking-[0.18em] text-coralNode">Need a form?</p>
+                        <h3 class="mt-2 text-2xl font-black text-white">Have not received or completed the forms?</h3>
+                        <p class="mt-4 leading-7 text-slate-300">Please coordinate directly with the researchers conducting the survey before participating.</p>
                     </aside>
                 </div>
             </div>
         </section>
 
-
         <section id="surveys" class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="survey-heading">
             <div class="flex flex-col justify-between gap-8 md:flex-row md:items-end">
                 <div>
-                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">01 / Share your perspective</p>
-                    <h2 id="survey-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">Student questionnaire</h2>
-                    <p class="mt-3 max-w-xl text-slate-600">This student survey includes the ISO-based and feature-based questionnaire. It takes only 15 to 30 minutes to complete.</p>
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-indigoNode">01 / Share your perspective</p>
+                    <h2 id="survey-heading" class="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">Student questionnaire</h2>
+                    <p class="mt-3 max-w-xl text-slate-300">This student survey includes the ISO-based and feature-based questionnaire. It takes only 15 to 30 minutes to complete.</p>
                 </div>
             </div>
 
             <div class="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px]" aria-live="polite">
-                <article class="survey-card rounded-2xl border border-slate-200 bg-white p-7 shadow-soft"
-                    data-category="student">
+                <article class="glass-panel rounded-2xl p-7 hover:-translate-y-1" data-category="student">
                     <div class="flex items-center justify-between gap-4">
-                        <span class="rounded-full bg-[#eef1f8] px-3 py-1 text-xs font-bold text-ink">Google Forms</span>
+                        <span class="rounded-full bg-white/10 border border-white/20 px-3 py-1 text-xs font-bold text-white backdrop-blur-md">Google Forms</span>
                         <span class="text-xs font-bold uppercase tracking-wider text-slate-400">01</span>
                     </div>
                     <div class="mt-10">
-                        <p class="text-2xl font-bold uppercase tracking-wider text-teal">For students</p>
-                        <h3 class="mt-2 text-2xl font-black text-ink">ISO & FEATURE-BASED QUESTIONNAIRE</h3>
-                        <p class="mt-3 leading-7 text-slate-600">Share your experience with MathPulse AI through the ISO-based and feature-based questionnaire. The survey takes only 15 to 30 minutes.</p>
+                        <p class="text-sm font-bold uppercase tracking-wider text-tealNode">For students</p>
+                        <h3 class="mt-2 text-2xl font-black text-white">ISO & FEATURE-BASED QUESTIONNAIRE</h3>
+                        <p class="mt-3 leading-7 text-slate-300">Share your experience with MathPulse AI through the ISO-based and feature-based questionnaire. The survey takes only 15 to 30 minutes.</p>
                     </div>
-                    <a class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-ink px-4 py-3 text-sm font-bold text-ink transition hover:bg-ink hover:text-white"
-                        href="https://forms.gle/4pa5nC6ygK2ia3Ft9" target="_blank" rel="noopener noreferrer">Open survey <span
-                            aria-hidden="true">↗</span></a>
+                    <a class="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10 hover:border-white/40"
+                        href="https://forms.gle/4pa5nC6ygK2ia3Ft9" target="_blank" rel="noopener noreferrer">Open survey <span aria-hidden="true">↗</span></a>
                 </article>
 
-                <div class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-teal/40 bg-teal/5 p-7 text-center">
-                    <img class="aspect-square w-40 border-8 border-white bg-white object-contain p-2 shadow-sm" src="assets/student-survey-qr.png" alt="QR code for the student Google Forms survey">
-                    <p class="mt-4 text-sm font-bold text-teal">Scan to open the student survey</p>
+                <div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-tealNode/40 bg-black/20 backdrop-blur-md p-7 text-center">
+                    <img class="aspect-square w-40 rounded-xl bg-white/90 object-contain p-2 shadow-inner" src="assets/student-survey-qr.png" alt="QR code for the student Google Forms survey">
+                    <p class="mt-4 text-sm font-bold text-tealNode">Scan to open the student survey</p>
                 </div>
             </div>
         </section>
 
-       
-        <section id="about" class="border-y border-slate-200 bg-white" aria-labelledby="about-heading">
+        <section id="about" class="border-y border-white/5 bg-black/20 backdrop-blur-sm" aria-labelledby="about-heading">
             <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
                 <div class="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-                    <button type="button" class="group flex items-center justify-center overflow-hidden rounded-3xl border border-slate-200 bg-white text-left shadow-soft" data-lightbox-image="assets/MATHPULSE%20web%20app%20qr.png" data-lightbox-alt="MathPulse AI web app QR code">
-                        <img class="mx-auto block h-auto max-h-[42rem] w-auto max-w-full transition duration-300 group-hover:scale-[1.02]" src="assets/MATHPULSE%20web%20app%20qr.png" alt="MathPulse AI web app QR code">
+                    <button type="button" class="group flex items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md text-left shadow-[0_8px_32px_rgba(0,0,0,0.3)]" data-lightbox-image="assets/MATHPULSE%20web%20app%20qr.png" data-lightbox-alt="MathPulse AI web app QR code">
+                        <img class="mx-auto block h-auto max-h-[42rem] w-auto max-w-full transition duration-300 group-hover:scale-[1.02] opacity-90 group-hover:opacity-100" src="assets/MATHPULSE%20web%20app%20qr.png" alt="MathPulse AI web app QR code">
                     </button>
                     <div>
-                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">02 / The bigger idea</p>
-                    <h2 id="about-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">MATHPULSE AI</h2>
-                    <p class="mt-3 leading-8 text-slate-600">MathPulse AI is an intelligent, gamified math learning platform designed to make math practice engaging and effective. Powered by adaptive AI, it dynamically generates personalized problem sets, tracks skill mastery in real time, and turns daily practice into an interactive challenge with XP, levels, and streak rewards.</p>
-                    <p class="mt-4 leading-8 text-slate-600">We bring together adaptive AI, pedagogy, and game design to build an experience that solves real learning challenges: instant feedback, intuitive step-by-step guidance, and measurable progress that keeps learners moving forward.</p>
-                    <ul class="mt-7 grid gap-3 text-sm font-bold text-ink sm:grid-cols-2">
-                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Adaptive Learning Support</li>
-                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Analytics & Progress Tracking</li>
-                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Student-Centered Design</li>
-                        <li class="flex items-center gap-2"><span class="text-coral">✓</span> Gamified Activity</li>
-                    </ul>
-                    <a href="https://mathpulse-ai-2026.web.app/avatar" target="_blank" rel="noopener noreferrer" class="mt-9 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-bold text-white transition hover:bg-teal">Visit MathPulse AI <span aria-hidden="true">↗</span></a>
+                        <p class="text-sm font-bold uppercase tracking-[0.18em] text-coralNode">02 / The bigger idea</p>
+                        <h2 id="about-heading" class="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">MATHPULSE AI</h2>
+                        <p class="mt-3 leading-8 text-slate-300">MathPulse AI is an intelligent, gamified math learning platform designed to make math practice engaging and effective. Powered by adaptive AI, it dynamically generates personalized problem sets, tracks skill mastery in real time, and turns daily practice into an interactive challenge with XP, levels, and streak rewards.</p>
+                        <p class="mt-4 leading-8 text-slate-300">We bring together adaptive AI, pedagogy, and game design to build an experience that solves real learning challenges: instant feedback, intuitive step-by-step guidance, and measurable progress that keeps learners moving forward.</p>
+                        <ul class="mt-7 grid gap-3 text-sm font-bold text-white sm:grid-cols-2">
+                            <li class="flex items-center gap-2"><span class="text-tealNode">✓</span> Adaptive Learning Support</li>
+                            <li class="flex items-center gap-2"><span class="text-tealNode">✓</span> Analytics & Progress Tracking</li>
+                            <li class="flex items-center gap-2"><span class="text-tealNode">✓</span> Student-Centered Design</li>
+                            <li class="flex items-center gap-2"><span class="text-tealNode">✓</span> Gamified Activity</li>
+                        </ul>
+                        <a href="https://mathpulse-ai-2026.web.app/avatar" target="_blank" rel="noopener noreferrer" class="btn-glow mt-9 inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-white">Visit MathPulse AI <span aria-hidden="true">↗</span></a>
                     </div>
                 </div>
                 <div class="mt-12">
-                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-teal">Website sneak peeks</p>
-                    <p class="mt-3 leading-7 text-slate-600">Browse the MathPulse AI experience one full-size screen at a time. Use the arrows to move through the sneak peeks, or click the current image to enlarge it.</p>
-                    <div id="sneakpeek-slideshow" class="relative mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-soft" aria-label="MathPulse AI website sneak-peek slideshow">
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-indigoNode">Website sneak peeks</p>
+                    <p class="mt-3 leading-7 text-slate-300">Browse the MathPulse AI experience one full-size screen at a time. Use the arrows to move through the sneak peeks, or click the current image to enlarge it.</p>
+                    <div id="sneakpeek-slideshow" class="relative mt-6 overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl" aria-label="MathPulse AI website sneak-peek slideshow">
                         <div class="flex items-center justify-center p-3 sm:p-6">
                             <button type="button" class="block w-full cursor-zoom-in" data-slideshow-lightbox>
-                                <img class="mx-auto block h-auto max-h-[70vh] w-auto max-w-full object-contain" src="assets/sneakpeeks/loginpage.png" alt="MathPulse AI login page" data-slideshow-image>
+                                <img class="mx-auto block h-auto max-h-[70vh] w-auto max-w-full object-contain rounded-xl opacity-90 transition hover:opacity-100" src="assets/sneakpeeks/loginpage.png" alt="MathPulse AI login page" data-slideshow-image>
                             </button>
                         </div>
-                        <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-ink/90 px-4 py-3 text-lg font-bold text-white shadow-lg" data-slideshow-previous aria-label="Previous website screenshot">←</button>
-                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-ink/90 px-4 py-3 text-lg font-bold text-white shadow-lg" data-slideshow-next aria-label="Next website screenshot">→</button>
-                        <div class="flex items-center justify-center gap-3 border-t border-slate-200 px-4 py-4">
-                            <span class="text-sm font-bold text-slate-600" data-slideshow-counter>1 / 17</span>
-                            <span class="text-sm text-slate-500" data-slideshow-caption>Login page</span>
+                        <button type="button" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-white/20" data-slideshow-previous aria-label="Previous website screenshot">←</button>
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-white/20" data-slideshow-next aria-label="Next website screenshot">→</button>
+                        <div class="flex items-center justify-center gap-3 border-t border-white/10 bg-black/20 px-4 py-4 backdrop-blur-md">
+                            <span class="text-sm font-bold text-white" data-slideshow-counter>1 / 17</span>
+                            <span class="text-sm text-slate-400" data-slideshow-caption>Login page</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-          <section id="mobile-app" class="border-t border-slate-200 bg-ink text-white" aria-labelledby="mobile-app-heading">
+        <section id="mobile-app" class="relative z-10" aria-labelledby="mobile-app-heading">
             <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-                <div>
-                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">03 / Learn anywhere</p>
-                    <h2 id="mobile-app-heading" class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">MathPulse AI Mobile App</h2>
-                    <p class="mt-4 max-w-xl leading-8 text-slate-300">The MathPulse AI mobile app is coming soon. It is currently in its early phase of beta testing as we work toward a smooth mobile learning experience.</p>
-                    <span class="mt-8 inline-flex items-center gap-2 rounded-full bg-coral px-6 py-3.5 text-sm font-bold text-white">Coming soon</span>
+                <div class="glass-panel rounded-3xl p-10 md:p-14 text-center max-w-4xl mx-auto">
+                    <p class="text-sm font-bold uppercase tracking-[0.18em] text-tealNode">03 / Learn anywhere</p>
+                    <h2 id="mobile-app-heading" class="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">MathPulse AI Mobile App</h2>
+                    <p class="mt-4 mx-auto max-w-xl leading-8 text-slate-300">The MathPulse AI mobile app is coming soon. It is currently in its early phase of beta testing as we work toward a smooth mobile learning experience.</p>
+                    <span class="mt-8 inline-flex items-center gap-2 rounded-full border border-tealNode/30 bg-tealNode/10 px-6 py-3.5 text-sm font-bold text-tealNode">Coming soon</span>
                 </div>
             </div>
         </section>
-        <section id="team" class="mx-auto max-w-7xl px-6 py-20 lg:px-8" aria-labelledby="team-heading">
+
+        <section id="team" class="mx-auto max-w-7xl px-6 py-10 lg:px-8 relative z-10" aria-labelledby="team-heading">
             <div class="text-center">
-                <p class="text-sm font-bold uppercase tracking-[0.18em] text-coral">04 / The people behind it</p>
-                <h2 id="team-heading" class="mt-3 text-3xl font-black tracking-tight text-ink sm:text-4xl">
+                <p class="text-sm font-bold uppercase tracking-[0.18em] text-coralNode">04 / The people behind it</p>
+                <h2 id="team-heading" class="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
                     Code that empowers, Research that matters.
                 </h2>
-                <p class="mx-auto mt-3 max-w-3xl text-slate-600">MathPulse AI is built by Information Technology students from Pamantasan ng Lungsod ng Valenzuela (PLV). Driven by a shared belief that no student should be left behind in math</p>
+                <p class="mx-auto mt-3 max-w-3xl text-slate-300">MathPulse AI is built by Information Technology students from Pamantasan ng Lungsod ng Valenzuela (PLV). Driven by a shared belief that no student should be left behind in math.</p>
             </div>
             <div class="mx-auto mt-10 grid max-w-5xl gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <img class="mx-auto h-20 w-20 rounded-full object-cover" src="assets/avatar_icon.png"
-                        alt="Faijah's avatar">
-                    <h3 class="mt-5 font-black text-ink">Faijah</h3>
-                    <p class="mt-1 text-sm text-slate-500">Project Manager & Coordinator</p>
+                <article class="glass-panel rounded-2xl p-6 text-center">
+                    <img class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-white/20 p-1" src="assets/avatar_icon.png" alt="Faijah's avatar">
+                    <h3 class="mt-5 font-black text-white">Faijah</h3>
+                    <p class="mt-1 text-xs text-slate-400">Project Manager & Coordinator</p>
                 </article>
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <img class="mx-auto h-20 w-20 rounded-full object-cover" src="assets/avatar_icon.png"
-                        alt="Deign's avatar">
-                    <h3 class="mt-5 font-black text-ink">Deign</h3>
-                    <p class="mt-1 text-sm text-slate-500">Technical Lead<br>Main Developer</p>
+                <article class="glass-panel rounded-2xl p-6 text-center">
+                    <img class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-white/20 p-1" src="assets/avatar_icon.png" alt="Deign's avatar">
+                    <h3 class="mt-5 font-black text-white">Deign</h3>
+                    <p class="mt-1 text-xs text-slate-400">Technical Lead<br>Main Developer</p>
                 </article>
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <img class="mx-auto h-20 w-20 rounded-full object-cover" src="assets/avatar_icon.png"
-                        alt="Raineer's avatar">
-                    <h3 class="mt-5 font-black text-ink">Raineer</h3>
-                    <p class="mt-1 text-sm text-slate-500">Design Lead<br> UI/UX DEsigner</p>
+                <article class="glass-panel rounded-2xl p-6 text-center">
+                    <img class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-white/20 p-1" src="assets/avatar_icon.png" alt="Raineer's avatar">
+                    <h3 class="mt-5 font-black text-white">Raineer</h3>
+                    <p class="mt-1 text-xs text-slate-400">Design Lead<br> UI/UX Designer</p>
                 </article>
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <img class="mx-auto h-20 w-20 rounded-full object-cover" src="assets/avatar_icon.png"
-                        alt="Lorraine's avatar">
-                    <h3 class="mt-5 font-black text-ink">Lorraine</h3>
-                    <p class="mt-1 text-sm text-slate-500">Design Lead<br> UI/UX Designer</p>
+                <article class="glass-panel rounded-2xl p-6 text-center">
+                    <img class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-white/20 p-1" src="assets/avatar_icon.png" alt="Lorraine's avatar">
+                    <h3 class="mt-5 font-black text-white">Lorraine</h3>
+                    <p class="mt-1 text-xs text-slate-400">Design Lead<br> UI/UX Designer</p>
                 </article>
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-                    <img class="mx-auto h-20 w-20 rounded-full object-cover" src="assets/avatar_icon.png"
-                        alt="Sean's avatar">
-                    <h3 class="mt-5 font-black text-ink">Sean</h3>
-                    <p class="mt-1 text-sm text-slate-500">Communication and Documentation Lead</p>
+                <article class="glass-panel rounded-2xl p-6 text-center">
+                    <img class="mx-auto h-20 w-20 rounded-full object-cover border-2 border-white/20 p-1" src="assets/avatar_icon.png" alt="Sean's avatar">
+                    <h3 class="mt-5 font-black text-white">Sean</h3>
+                    <p class="mt-1 text-xs text-slate-400">Communication and Documentation Lead</p>
                 </article>
             </div>
         </section>
 
-      
     </main>
 
-    <footer class="border-t border-slate-200 bg-ink text-white">
-        <div
-            class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+    <footer class="border-t border-white/10 bg-black/40 backdrop-blur-lg relative z-10">
+        <div class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">
             <div>
-                <p class="font-black">MathPulse AI Survey</p>
+                <p class="font-black text-white">MathPulse AI Survey</p>
                 <p class="mt-1 text-sm text-slate-400">© 2025–2026-2027
                     <br>
                     MathPulse AI Research Team
@@ -532,19 +374,20 @@
                     Pamantasan Ng Lungsod Ng Valenzuela
                 </p>
             </div>
-                <nav aria-label="Footer navigation" class="flex flex-wrap gap-5 text-sm font-bold text-slate-300"><a href="#surveys"
-                    class="transition hover:text-white">Surveys</a><a href="#reminders"
-                    class="transition hover:text-white">Reminders</a><a href="#about"
-                    class="transition hover:text-white">About</a><a href="#team"
-                    class="transition hover:text-white">Team</a><a href="#mobile-app"
-                    class="transition hover:text-white">Mobile app</a></nav>
+            <nav aria-label="Footer navigation" class="flex flex-wrap gap-5 text-sm font-bold text-slate-300">
+                <a href="#surveys" class="transition hover:text-white">Surveys</a>
+                <a href="#reminders" class="transition hover:text-white">Reminders</a>
+                <a href="#about" class="transition hover:text-white">About</a>
+                <a href="#team" class="transition hover:text-white">Team</a>
+                <a href="#mobile-app" class="transition hover:text-white">Mobile app</a>
+            </nav>
         </div>
     </footer>
 
     <dialog id="image-lightbox" class="max-h-[90vh] max-w-[92vw] rounded-2xl border-0 bg-transparent p-0 shadow-2xl">
-        <div class="relative rounded-2xl bg-white p-3">
-            <button id="lightbox-close" type="button" class="absolute right-3 top-3 z-10 rounded-full bg-ink px-3 py-2 text-sm font-bold text-white" aria-label="Close enlarged image preview">Close</button>
-            <img id="lightbox-image" class="max-h-[82vh] max-w-[88vw] rounded-xl object-contain" src="" alt="">
+        <div class="relative rounded-2xl bg-black/60 backdrop-blur-2xl border border-white/10 p-3 shadow-[0_10px_50px_rgba(0,0,0,0.5)]">
+            <button id="lightbox-close" type="button" class="absolute right-3 top-3 z-10 rounded-full bg-white/10 backdrop-blur-md px-3 py-2 text-sm font-bold text-white border border-white/20 transition hover:bg-white/20" aria-label="Close enlarged image preview">Close</button>
+            <img id="lightbox-image" class="max-h-[82vh] max-w-[88vw] rounded-xl object-contain bg-black/40" src="" alt="">
         </div>
     </dialog>
 
@@ -642,5 +485,4 @@
         });
     </script>
 </body>
-
 </html>
